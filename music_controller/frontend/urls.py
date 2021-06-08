@@ -6,4 +6,5 @@ urlpatterns = [
     path('', Index.as_view()),
     path('join/', Index.as_view()),
     path('create/', Index.as_view()),
+    path('room/<str:roomCode>', Index.as_view()),
 ]
