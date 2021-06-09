@@ -7,8 +7,10 @@ from .serializers import RoomSerializaer, CreateRoomSerializer
 from .models import Room
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import JsonResponse
 
 # Create your views here.
+
 
 class RoomView(generics.ListAPIView):
     queryset = Room.objects.all()
@@ -18,7 +20,7 @@ class RoomView(generics.ListAPIView):
 class CreateRoomView(APIView):
     serializer_class = CreateRoomSerializer
 
-    def post(self, request, format=None,*args, **kwargs):
+    def post(self, request, format=None, *args, **kwargs):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
 
@@ -36,7 +38,8 @@ class CreateRoomView(APIView):
                 self.request.session['room_code'] = room.code
                 return Response(RoomSerializaer(room).data, status=status.HTTP_200_OK)
             else:
-                room = Room(host=host, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip)
+                room = Room(host=host, guest_can_pause=guest_can_pause,
+                            votes_to_skip=votes_to_skip)
                 room.save()
                 self.request.session['room_code'] = room.code
                 return Response(RoomSerializaer(room).data, status=status.HTTP_201_CREATED)
@@ -56,7 +59,7 @@ class GetRoomView(APIView):
                 return Response(data, status=status.HTTP_200_OK)
             return Response({'Room Not Found': 'Invalid Room Code.'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class JoinRoomView(APIView):
     lookup_url_kwarg = 'code'
@@ -74,3 +77,15 @@ class JoinRoomView(APIView):
                 return Response({'message': 'Room Joined!'}, status=status.HTTP_200_OK)
             return Response({'Bad Request': 'Invalid Room Code!'}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'error': 'Room With This Code Does Not Exists!'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UserInRoomView(APIView):
+
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        data = {
+            'code': self.request.session.get('room_code')
+        }
+        return JsonResponse(data, status=status.HTTP_200_OK)
