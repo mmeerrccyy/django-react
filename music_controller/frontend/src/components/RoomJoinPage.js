@@ -69,12 +69,11 @@ export default class RoomJoinPage extends Component {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        code: this.state.code,
+        code: this.state.roomCode,
       }),
     };
     fetch("/api/join-room", requestOptions)
       .then((response) => {
-          console.log(response)
         if (response.ok) {
           this.props.history.push('/room/' + this.state.roomCode);
         } else {
