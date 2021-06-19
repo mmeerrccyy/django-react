@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.exceptions import AuthenticationFailed
-from .views import AuthURLView, spotify_callback, IsAuthenticatedView, CurrentSongView
+from .views import AuthURLView, spotify_callback, IsAuthenticatedView, CurrentSongView, PauseSongView, PlaySongView
 
 
 urlpatterns = [
@@ -8,4 +8,6 @@ urlpatterns = [
     path('redirect', spotify_callback),
     path('is-authenticated', IsAuthenticatedView.as_view()),
     path('current-song', CurrentSongView.as_view()),
+    path('play', PlaySongView.as_view()),
+    path('pause', PauseSongView.as_view()),
 ]
