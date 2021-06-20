@@ -103,19 +103,21 @@ export default class Room extends Component {
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} align="center">
-          <Typography variant="h4" component="h4">
-            Code: {this.roomCode}
-          </Typography>
+          <CreateRoomPage
+            update={true}
+            votesToSkip={this.state.votesToSkip}
+            guestCanPause={this.state.guestCanPause}
+            roomCode={this.roomCode}
+            updateCallback={this.getRoomDetails}
+          />
         </Grid>
-        <MusicPlayer {...this.state.song} />
-        {this.state.isHost ? this.renderSettingsButton() : null}
         <Grid item xs={12} align="center">
           <Button
             variant="contained"
             color="secondary"
-            onClick={this.leaveButtonPressed}
+            onClick={() => this.updateShowSettings(false)}
           >
-            Leave Room
+            Close
           </Button>
         </Grid>
       </Grid>
@@ -139,31 +141,26 @@ export default class Room extends Component {
   render() {
     if (this.state.showSettings) {
       return this.renderSettings();
-    } else {
-      return (
-        <Grid container spacing={1}>
-          <Grid item xs={12} align="center">
-            <Typography variant="h4" component="h4">
-              Code: {this.roomCode}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} align="center">
-            <Typography variant="h4" component="h4">
-              <MusicPlayer {...this.state.song} />
-            </Typography>
-          </Grid>
-          {this.state.isHost ? this.renderSettingsButton() : null}
-          <Grid item xs={12} align="center">
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.leaveButtonPressed}
-            >
-              Leave Room
-            </Button>
-          </Grid>
-        </Grid>
-      );
     }
+    return (
+      <Grid container spacing={1}>
+        <Grid item xs={12} align="center">
+          <Typography variant="h4" component="h4">
+            Code: {this.roomCode}
+          </Typography>
+        </Grid>
+        <MusicPlayer {...this.state.song} />
+        {this.state.isHost ? this.renderSettingsButton() : null}
+        <Grid item xs={12} align="center">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={this.leaveButtonPressed}
+          >
+            Leave Room
+          </Button>
+        </Grid>
+      </Grid>
+    );
   }
 }
